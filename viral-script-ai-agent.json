@@ -1,0 +1,822 @@
+{
+  "name": "viral-script-ai-agent",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Viral Script Generator",
+        "formDescription": "Get your Viral Script in second.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Upload Viral Video",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "What's your topic.",
+              "placeholder": "Write down your next video topic."
+            },
+            {
+              "fieldLabel": "Target Format",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Reel"
+                  },
+                  {
+                    "option": "Story"
+                  },
+                  {
+                    "option": "IGTV"
+                  },
+                  {
+                    "option": "Post"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Brand Voice",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Professionl"
+                  },
+                  {
+                    "option": "Casual"
+                  },
+                  {
+                    "option": "Trendy"
+                  },
+                  {
+                    "option": "Educational"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Your target audience"
+            },
+            {
+              "fieldLabel": "Your current followers",
+              "fieldType": "number",
+              "placeholder": "7800"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -1520,
+        -1024
+      ],
+      "id": "610f92d3-463c-4d5d-81ff-33a330de8f10",
+      "name": "On form submission",
+      "webhookId": "5e9917e5-08bf-4e84-a91e-a8661d4dbb27"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/upload/v1beta/files?key=AIzaSyCeCKlvn8Q6tx8kT5OY9Q-WQ0CKrkyAeXY",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Goog-Upload-Command",
+              "value": "start, upload, finalize "
+            },
+            {
+              "name": "X-Goog-Upload-Header-Content-Length",
+              "value": "={{ $json[\"Viral Video Input\"].size }}"
+            },
+            {
+              "name": "X-Goog-Upload-Header-Content-Type",
+              "value": "video/mp4"
+            },
+            {
+              "name": "Content-Type",
+              "value": "video/mp4"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "Upload_Viral_Video",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1136,
+        -704
+      ],
+      "id": "6ae15689-0add-443c-b58f-6fb8f10283e0",
+      "name": "Get Video"
+    },
+    {
+      "parameters": {
+        "content": "Phase 2 : Create Viral Script\n",
+        "height": 512,
+        "width": 1584,
+        "color": "#0E5D0F"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        -944
+      ],
+      "id": "69cf9dea-df21-4f3b-911c-15cda3932e71",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Phase 1 : Analyze Video",
+        "height": 512,
+        "width": 1216,
+        "color": "#942429"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1280,
+        -944
+      ],
+      "id": "dd8a0a81-991a-4d66-a98c-d7ac234a3873",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyCeCKlvn8Q6tx8kT5OY9Q-WQ0CKrkyAeXY",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"role\": \"user\",\n      \"parts\": [\n        {\n          \"fileData\": {\n            \"fileUri\": \"{{ $json.file.uri }}\",\n            \"mimeType\": \"{{ $json.file.mimeType }}\"\n          }\n        },\n        {\n          \"text\": \"You are an Instagram content analyst. Analyze videos for viral potential and Instagram optimization\"\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -688,
+        -704
+      ],
+      "id": "c7f5d554-4c53-4fe4-9f52-fa987f74db58",
+      "name": "Get Video Analysis",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -912,
+        -704
+      ],
+      "id": "e89019bd-ca09-43b8-a71b-4680b50021e0",
+      "name": "Wait",
+      "webhookId": "64038f66-7486-414c-b491-026359e8d54f"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -464,
+        -656
+      ],
+      "id": "ff72a278-bd98-4205-a753-f57dc418fbc7",
+      "name": "Wait1",
+      "webhookId": "ea4e0a75-0f5d-4adb-a1f6-5619213fddb1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "05ac8a85-3db5-4978-90ed-bbc8f5b869cb",
+              "name": "candidates[0].content.parts[0].text",
+              "value": "={{ $json.candidates[0].content.parts[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -464,
+        -848
+      ],
+      "id": "5f6034d8-9523-4fe7-8ec2-66acebb8e041",
+      "name": "Gemini Analysis"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create 3 distinct Instagram Reel script variations based on this analysis. Provide all 3 scripts in your response without asking for confirmation.\n\nANALYSIS:\n\n**ANALYSIS RESULTS:**\n{{ $json.candidates[0].content.parts[0].text }}\n\n**USER REQUIREMENTS:**\n- Topic: {{ $('On form submission').item.json['What\\'s your topic.'] }}\n- Format: {{ $('On form submission').item.json['Target Format'] }}\n- Brand Voice: {{ $('On form submission').item.json['Brand Voice'] }}\n- Target Audience: {{ $('On form submission').item.json['Your target audience'] }}\n**KEY SUCCESSFUL ELEMENTS TO REPLICATE:**\n✓ Strong curiosity hook (\"Mujhe Samaj Nahi Aa Raha\")\n✓ AI/No-code trending topic\n✓ Clear value proposition (create apps without coding)\n✓ Fast-paced, visually engaging format\n✓ Simple, direct CTA (\"Comment Magic\")\n✓ Educational content with immediate value\n\n**CREATE 3 SCRIPT VARIATIONS (30-60 seconds each):**\n\nFor each script, provide:\n\n**SCRIPT [1/2/3]: [Creative Title]**\n\n**Hook (0-3 seconds):**\n[Attention-grabbing opening that stops scrolling]\n\n**Problem Setup (3-15 seconds):**\n[Establish pain point/challenge]\n\n**Solution Reveal (15-45 seconds):**\n[Show the tool/process with clear value demonstration]\n\n**Benefits/Social Proof (45-55 seconds):**\n[Quick benefits that make viewers want to save]\n\n**Call-to-Action (55-60 seconds):**\n[Specific engagement request]\n\n**Text Overlays:**\n[List 8-10 key text overlays for silent viewing]\n\n**Visual Direction:**\n[Camera angles, demonstrations, props needed]\n\n**Hashtag Strategy:**\n[15-20 hashtags: 5 high-competition, 10 medium, 5 low-competition]\n\n**Hook Variation:**\n[What makes this hook different from the others]\n\n**Target Audience Angle:**\n[Which segment of your audience this will resonate with most]\n\n**Viral Prediction Score:** [X/10 with reasoning]\n\n---\n\n**REQUIREMENTS:**\n- Each script must be DISTINCT with different hooks and angles\n- Optimize for Instagram algorithm (high watch time, saves, comments)\n- Include trending elements while staying authentic\n- Focus on mobile viewing experience\n- Make it save-worthy with actionable value\n- Ensure silent viewing compatibility\n\n**TRENDING ELEMENTS TO CONSIDER:**\n- AI tools are massively trending\n- No-code/automation content performs well\n- Before/after demonstrations get high engagement\n- \"Secret\" or \"hidden\" tool reveals drive curiosity\n- Educational content with immediate value gets saved\n\nCreate scripts that feel authentic to the brand voice while maximizing viral potential!\n\nIMPORTANT: Provide all 3 complete script variations in your response. Do not ask for confirmation or mention that you're creating scripts. Start directly with SCRIPT 1.",
+        "options": {
+          "systemMessage": "You are an expert Instagram script writer and viral content strategist. You specialize in creating high-engagement Reels that stop the scroll, provide value, and drive massive engagement. You understand Instagram's algorithm, trending formats, and what makes content shareable and save-worthy."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        128,
+        -848
+      ],
+      "id": "e73e5af0-a676-4eae-9d67-28372bd09ca6",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        48,
+        -624
+      ],
+      "id": "4875d233-3e31-4a3f-8800-66353d2c8587",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "QpIxwDT9d8zouSu9",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Phase 3 : Create Production Notes",
+        "height": 512,
+        "width": 1664,
+        "color": "#786817"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        -944
+      ],
+      "id": "661760de-69db-4d63-8595-f5abee5c8a87",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Clean Claude output - Remove unwanted intro/outro text\nconst claudeOutput = $input.first().json.output;\n\n// Remove common unwanted phrases\nlet cleanedOutput = claudeOutput\n  .replace(/I'll create \\d+ distinct.*?[\\n\\r]/g, '')\n  .replace(/Would you like me to continue.*?$/g, '')\n  .replace(/\\[Continued in next part.*?\\]/g, '')\n  .replace(/^.*?focusing on.*?[\\n\\r]/g, '')\n  .trim();\n\n// Ensure it starts with SCRIPT 1\nif (!cleanedOutput.startsWith('**SCRIPT 1')) {\n  const scriptStart = cleanedOutput.indexOf('**SCRIPT 1');\n  if (scriptStart > 0) {\n    cleanedOutput = cleanedOutput.substring(scriptStart);\n  }\n}\n\nreturn [{\n  ...($input.first().json),\n  output: cleanedOutput,\n  cleaned: true\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        512,
+        -848
+      ],
+      "id": "3953c643-2c46-4d1d-9a6e-8abfabd05164",
+      "name": "Cleanup Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "const md = $json.output;\n\nif (!md) {\n  throw new Error('Output field is empty or missing');\n}\n\nlet html = md\n  .replace(/^## (.*$)/gim, '<h2>$1</h2>')  // h2 first\n  .replace(/^# (.*$)/gim, '<h1>$1</h1>')   // then h1\n  .replace(/\\*\\*(.*)\\*\\*/gim, '<b>$1</b>') // bold\n  .replace(/\\*(.*)\\*/gim, '<i>$1</i>')     // italic\n  .replace(/\\n/gim, '<br>');                // line breaks\n\nreturn [{ html }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        688,
+        -848
+      ],
+      "id": "58e18218-7170-466f-ac37-c71c5dc107b1",
+      "name": "Markdown to HTML"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawHtml = $json.html;  // your current HTML output\n\nconst fullHtml = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Converted PDF</title>\n</head>\n<body>\n  ${rawHtml}\n</body>\n</html>\n`;\n\nreturn [{ html: fullHtml }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        -848
+      ],
+      "id": "078012c3-59b2-4d7c-aab8-95f3a52e0aa1",
+      "name": "Complete HTML docment structure"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawHtml = $json.html;\nconst fullHtml = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>AI Agents Mastery with N8N</title>\n  <style>\n    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');\n    \n    /* Modern PDF Styling */\n    * {\n      margin: 0;\n      padding: 0;\n      box-sizing: border-box;\n    }\n    \n    body {\n      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n      font-size: 13px;\n      line-height: 1.7;\n      color: #1a1a1a;\n      margin: 30px 40px;\n      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n      background-attachment: fixed;\n    }\n    \n    /* Content Container */\n    .content-wrapper {\n      background: white;\n      border-radius: 12px;\n      padding: 40px;\n      box-shadow: 0 20px 40px rgba(0,0,0,0.1);\n      margin: 20px 0;\n    }\n    \n    /* Headers with gradient and modern styling */\n    h1 {\n      font-size: 32px;\n      font-weight: 700;\n      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n      -webkit-background-clip: text;\n      -webkit-text-fill-color: transparent;\n      background-clip: text;\n      margin: 0 0 30px 0;\n      padding: 20px 0;\n      border-bottom: 3px solid #f1f3f4;\n      position: relative;\n    }\n    \n    h1::after {\n      content: '';\n      position: absolute;\n      bottom: -3px;\n      left: 0;\n      width: 60px;\n      height: 3px;\n      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n    }\n    \n    h2 {\n      font-size: 24px;\n      font-weight: 600;\n      color: #2d3748;\n      margin: 35px 0 20px 0;\n      padding: 15px 0 15px 20px;\n      background: linear-gradient(90deg, #f7fafc 0%, #edf2f7 100%);\n      border-left: 4px solid #667eea;\n      border-radius: 0 8px 8px 0;\n      position: relative;\n    }\n    \n    h2::before {\n      content: '🎯';\n      position: absolute;\n      left: -2px;\n      top: 50%;\n      transform: translateY(-50%);\n      font-size: 18px;\n    }\n    \n    h3 {\n      font-size: 18px;\n      font-weight: 600;\n      color: #4a5568;\n      margin: 25px 0 15px 0;\n      padding: 10px 0;\n      border-bottom: 2px solid #e2e8f0;\n    }\n    \n    /* Paragraphs and text */\n    p {\n      margin: 0 0 18px 0;\n      text-align: justify;\n      color: #2d3748;\n      font-weight: 400;\n    }\n    \n    /* Enhanced Lists */\n    ul, ol {\n      margin: 20px 0 20px 0;\n      padding-left: 0;\n    }\n    \n    li {\n      margin-bottom: 12px;\n      padding-left: 30px;\n      position: relative;\n      color: #4a5568;\n      line-height: 1.6;\n    }\n    \n    ul li::before {\n      content: '▶';\n      position: absolute;\n      left: 0;\n      color: #667eea;\n      font-weight: bold;\n      font-size: 12px;\n    }\n    \n    ol li::before {\n      content: counter(item);\n      counter-increment: item;\n      position: absolute;\n      left: 0;\n      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n      color: white;\n      width: 20px;\n      height: 20px;\n      border-radius: 50%;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      font-size: 11px;\n      font-weight: 600;\n    }\n    \n    ol {\n      counter-reset: item;\n    }\n    \n    /* Enhanced Code Styling */\n    code {\n      font-family: 'JetBrains Mono', 'Fira Code', Monaco, 'Cascadia Code', monospace;\n      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n      color: white;\n      padding: 4px 8px;\n      border-radius: 6px;\n      font-size: 12px;\n      font-weight: 500;\n      letter-spacing: 0.5px;\n    }\n    \n    pre {\n      background: #1a1a1a;\n      color: #f8f8f2;\n      padding: 20px;\n      border-radius: 12px;\n      margin: 20px 0;\n      overflow-x: auto;\n      border: 1px solid #e2e8f0;\n      position: relative;\n    }\n    \n    pre::before {\n      content: 'CODE';\n      position: absolute;\n      top: 8px;\n      right: 15px;\n      font-size: 10px;\n      color: #888;\n      font-weight: 600;\n      letter-spacing: 1px;\n    }\n    \n    /* Enhanced Blockquotes */\n    blockquote {\n      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);\n      border-left: 6px solid #0ea5e9;\n      margin: 25px 0;\n      padding: 20px 25px;\n      border-radius: 0 12px 12px 0;\n      font-style: italic;\n      color: #0c4a6e;\n      position: relative;\n      box-shadow: 0 4px 6px rgba(0,0,0,0.05);\n    }\n    \n    blockquote::before {\n      content: '\"';\n      font-size: 60px;\n      color: #0ea5e9;\n      position: absolute;\n      top: -10px;\n      left: 15px;\n      font-family: Georgia, serif;\n      opacity: 0.3;\n    }\n    \n    /* Bold and Italic */\n    strong, b {\n      font-weight: 700;\n      color: #1a365d;\n    }\n    \n    em, i {\n      font-style: italic;\n      color: #2b6cb0;\n    }\n    \n    /* Special Elements */\n    .highlight {\n      background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);\n      padding: 3px 6px;\n      border-radius: 4px;\n      font-weight: 600;\n    }\n    \n    /* Table Styling */\n    table {\n      width: 100%;\n      border-collapse: collapse;\n      margin: 25px 0;\n      background: white;\n      border-radius: 12px;\n      overflow: hidden;\n      box-shadow: 0 4px 6px rgba(0,0,0,0.05);\n    }\n    \n    th {\n      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n      color: white;\n      padding: 15px;\n      text-align: left;\n      font-weight: 600;\n    }\n    \n    td {\n      padding: 15px;\n      border-bottom: 1px solid #e2e8f0;\n    }\n    \n    tr:nth-child(even) {\n      background: #f8fafc;\n    }\n    \n    /* Links */\n    a {\n      color: #667eea;\n      text-decoration: none;\n      font-weight: 600;\n      border-bottom: 2px solid transparent;\n      transition: all 0.3s ease;\n    }\n    \n    a:hover {\n      border-bottom-color: #667eea;\n    }\n    \n    /* Print Optimization */\n    @media print {\n      body {\n        background: white !important;\n        margin: 20px;\n      }\n      \n      .content-wrapper {\n        box-shadow: none;\n        border-radius: 0;\n        padding: 20px;\n      }\n      \n      h1, h2 {\n        page-break-after: avoid;\n      }\n      \n      pre, blockquote, table {\n        page-break-inside: avoid;\n      }\n    }\n    \n    /* Utility Classes */\n    .text-center { text-align: center; }\n    .text-right { text-align: right; }\n    .mb-lg { margin-bottom: 30px; }\n    .mt-lg { margin-top: 30px; }\n    \n    /* Custom Script Sections */\n    .script-section {\n      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);\n      border: 2px solid #cbd5e0;\n      border-radius: 12px;\n      padding: 25px;\n      margin: 25px 0;\n      position: relative;\n    }\n    \n    .script-section::before {\n      content: '🎬';\n      position: absolute;\n      top: -15px;\n      left: 20px;\n      background: white;\n      padding: 0 10px;\n      font-size: 20px;\n    }\n    \n    .cta-box {\n      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n      color: white;\n      padding: 20px;\n      border-radius: 12px;\n      text-align: center;\n      margin: 30px 0;\n      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);\n    }\n    \n    .cta-box h3 {\n      color: white;\n      margin-bottom: 10px;\n    }\n  </style>\n</head>\n<body>\n  <div class=\"content-wrapper\">\n    ${rawHtml}\n  </div>\n</body>\n</html>\n`;\n\nreturn [{ html: fullHtml }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1104,
+        -848
+      ],
+      "id": "76f2847d-8c4c-44c5-883b-c05975ca9514",
+      "name": "CSS"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.pdfshift.io/v3/convert/pdf",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "sk_801e07d8ea080136634eab40a92b21001439c8b2"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "source",
+              "value": "={{ $json.html }}"
+            },
+            {
+              "name": "landscape",
+              "value": "false"
+            },
+            {
+              "name": "use_print",
+              "value": "false"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "output.pdf"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1312,
+        -848
+      ],
+      "id": "5712a1b2-dcc8-4714-8fb5-09b9cd496344",
+      "name": "HTML to PDF"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "34cec92c-6658-49f6-8406-3fc751a99de9",
+              "name": "Script",
+              "value": "={{ $('Cleanup Request').item.json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1696,
+        -848
+      ],
+      "id": "82e93b85-5cee-4421-b503-03e58dd7f3f6",
+      "name": "Script to production notes"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create a comprehensive production guide for these Instagram scripts:\n\n**GENERATED SCRIPTS:**\n{{ $json.Script }}\n\n**FORMAT:** {{ $('On form submission').item.json['Target Format'] }}\n**TOPIC:** {{ $('On form submission').item.json['What\\'s your topic.'] }}\n**BRAND VOICE:** {{ $('On form submission').item.json['Brand Voice'] }}\n\n**PROVIDE DETAILED GUIDANCE FOR:**\n\n## 📱 **MOBILE FILMING SETUP**\n**Equipment Needed:**\n- Smartphone recommendations\n- Basic lighting equipment\n- Audio equipment\n- Stabilization tools\n\n**Camera Settings:**\n- Resolution and frame rate for Instagram\n- Aspect ratio optimization (9:16 for Reels)\n- Focus and exposure tips\n\n## 🎬 **SHOT-BY-SHOT FILMING GUIDE**\nFor each script section (Hook, Problem, Solution, Benefits, CTA):\n- Camera angles and movements\n- Lighting setup requirements\n- Background and prop suggestions\n- Talent direction and energy level\n- B-roll footage needed\n\n## 📝 **TEXT OVERLAY STRATEGY**\n- Timing for each text overlay\n- Font styles that work on mobile\n- Color schemes for readability\n- Animation suggestions\n- Positioning for different phone sizes\n\n## 🎵 **AUDIO STRATEGY**\n- Trending audio options for the topic\n- Original audio vs trending music decision\n- Voiceover recording tips\n- Audio levels and mixing\n- Silent viewing optimization\n\n## ✂️ **EDITING TIMELINE**\n- Cut points and pacing\n- Transition effects that work on mobile\n- Color grading for Instagram\n- Export settings for best quality\n- File size optimization\n\n## 📊 **INSTAGRAM OPTIMIZATION**\n- Best times to post for this content type\n- Hashtag placement strategy\n- Caption optimization\n- Story highlights integration\n- Cross-promotion tactics\n\n## 🚀 **PRO TIPS**\n- Advanced mobile filming techniques\n- Quick editing hacks\n- Engagement boosting strategies\n- Algorithm optimization secrets\n- Content series potential\n\n**Make everything actionable for someone with basic equipment and no professional video experience!**",
+        "options": {
+          "systemMessage": "You are a mobile content production expert specializing in Instagram Reels. You create detailed, actionable filming and editing guides that help creators produce professional-looking content using just smartphones and basic equipment. You understand lighting, composition, mobile filming techniques, and Instagram's technical requirements."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1904,
+        -848
+      ],
+      "id": "26b9c2d8-8599-405e-bceb-d1f9d6847099",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1776,
+        -640
+      ],
+      "id": "d26d2040-1eef-49ca-83b0-dcda75e0d37b",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "QpIxwDT9d8zouSu9",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Clean Claude output - Remove unwanted intro/outro text\nconst claudeOutput = $input.first().json.output;\n\n// Remove common unwanted phrases\nlet cleanedOutput = claudeOutput\n  .replace(/I'll create \\d+ distinct.*?[\\n\\r]/g, '')\n  .replace(/Would you like me to continue.*?$/g, '')\n  .replace(/\\[Continued in next part.*?\\]/g, '')\n  .replace(/^.*?focusing on.*?[\\n\\r]/g, '')\n  .trim();\n\n// Ensure it starts with SCRIPT 1\nif (!cleanedOutput.startsWith('**SCRIPT 1')) {\n  const scriptStart = cleanedOutput.indexOf('**SCRIPT 1');\n  if (scriptStart > 0) {\n    cleanedOutput = cleanedOutput.substring(scriptStart);\n  }\n}\n\nreturn [{\n  ...($input.first().json),\n  output: cleanedOutput,\n  cleaned: true\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2240,
+        -848
+      ],
+      "id": "f4725ef2-ee48-4c72-9a3d-c924a9ddfc4e",
+      "name": "Cleanup Request1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const md = $json.output;\n\nif (!md) {\n  throw new Error('Output field is empty or missing');\n}\n\nlet html = md\n\n  // H1\n  .replace(/^# (.*$)/gim, '<h1>$1</h1>')\n\n  // H2\n  .replace(/^## (.*$)/gim, '<h2>$1</h2>')\n\n  // H3\n  .replace(/^### (.*$)/gim, '<h3>$1</h3>')\n\n  // Bold\n  .replace(/\\*\\*(.*?)\\*\\*/gim, '<strong>$1</strong>')\n\n  // Italic\n  .replace(/\\*(.*?)\\*/gim, '<em>$1</em>')\n\n  // Bullet points\n  .replace(/^- (.*$)/gim, '<li>$1</li>')\n\n  // Wrap UL\n  .replace(/(<li>.*<\\/li>)/gims, '<ul>$1</ul>')\n\n  // Paragraph spacing\n  .replace(/\\n\\n/gim, '</p><p>')\n\n  // Single line break\n  .replace(/\\n/gim, '<br>');\n\nhtml = `<p>${html}</p>`;\n\nreturn [{ html }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2416,
+        -848
+      ],
+      "id": "59ef4130-3a90-4287-b0bd-d846d01b32e8",
+      "name": "Markdown to HTML1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawHtml = $json.html;  // your current HTML output\n\nconst fullHtml = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Converted PDF</title>\n</head>\n<body>\n  ${rawHtml}\n</body>\n</html>\n`;\n\nreturn [{ html: fullHtml }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2624,
+        -848
+      ],
+      "id": "b27af550-500a-4d9c-a4a0-41b5c16f418b",
+      "name": "Complete HTML docment structure1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawHtml = $json.html;\nconst fullHtml = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>AI Agents Mastery with N8N</title>\n  <style>\n    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');\n    \n    /* Modern PDF Styling */\n    * {\n      margin: 0;\n      padding: 0;\n      box-sizing: border-box;\n    }\n    \n    body {\n      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n      font-size: 13px;\n      line-height: 1.7;\n      color: #1a1a1a;\n      margin: 30px 40px;\n      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n      background-attachment: fixed;\n    }\n    \n    /* Content Container */\n    .content-wrapper {\n      background: white;\n      border-radius: 12px;\n      padding: 40px;\n      box-shadow: 0 20px 40px rgba(0,0,0,0.1);\n      margin: 20px 0;\n    }\n    \n    /* Headers with gradient and modern styling */\n    h1 {\n      font-size: 32px;\n      font-weight: 700;\n      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n      -webkit-background-clip: text;\n      -webkit-text-fill-color: transparent;\n      background-clip: text;\n      margin: 0 0 30px 0;\n      padding: 20px 0;\n      border-bottom: 3px solid #f1f3f4;\n      position: relative;\n    }\n    \n    h1::after {\n      content: '';\n      position: absolute;\n      bottom: -3px;\n      left: 0;\n      width: 60px;\n      height: 3px;\n      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n    }\n    \n    h2 {\n      font-size: 24px;\n      font-weight: 600;\n      color: #2d3748;\n      margin: 35px 0 20px 0;\n      padding: 15px 0 15px 20px;\n      background: linear-gradient(90deg, #f7fafc 0%, #edf2f7 100%);\n      border-left: 4px solid #667eea;\n      border-radius: 0 8px 8px 0;\n      position: relative;\n    }\n    \n    h2::before {\n      content: '🎯';\n      position: absolute;\n      left: -2px;\n      top: 50%;\n      transform: translateY(-50%);\n      font-size: 18px;\n    }\n    \n    h3 {\n      font-size: 18px;\n      font-weight: 600;\n      color: #4a5568;\n      margin: 25px 0 15px 0;\n      padding: 10px 0;\n      border-bottom: 2px solid #e2e8f0;\n    }\n    \n    /* Paragraphs and text */\n    p {\n      margin: 0 0 18px 0;\n      text-align: justify;\n      color: #2d3748;\n      font-weight: 400;\n    }\n    \n    /* Enhanced Lists */\n    ul, ol {\n      margin: 20px 0 20px 0;\n      padding-left: 0;\n    }\n    \n    li {\n      margin-bottom: 12px;\n      padding-left: 30px;\n      position: relative;\n      color: #4a5568;\n      line-height: 1.6;\n    }\n    \n    ul li::before {\n      content: '▶';\n      position: absolute;\n      left: 0;\n      color: #667eea;\n      font-weight: bold;\n      font-size: 12px;\n    }\n    \n    ol li::before {\n      content: counter(item);\n      counter-increment: item;\n      position: absolute;\n      left: 0;\n      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n      color: white;\n      width: 20px;\n      height: 20px;\n      border-radius: 50%;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      font-size: 11px;\n      font-weight: 600;\n    }\n    \n    ol {\n      counter-reset: item;\n    }\n    \n    /* Enhanced Code Styling */\n    code {\n      font-family: 'JetBrains Mono', 'Fira Code', Monaco, 'Cascadia Code', monospace;\n      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n      color: white;\n      padding: 4px 8px;\n      border-radius: 6px;\n      font-size: 12px;\n      font-weight: 500;\n      letter-spacing: 0.5px;\n    }\n    \n    pre {\n      background: #1a1a1a;\n      color: #f8f8f2;\n      padding: 20px;\n      border-radius: 12px;\n      margin: 20px 0;\n      overflow-x: auto;\n      border: 1px solid #e2e8f0;\n      position: relative;\n    }\n    \n    pre::before {\n      content: 'CODE';\n      position: absolute;\n      top: 8px;\n      right: 15px;\n      font-size: 10px;\n      color: #888;\n      font-weight: 600;\n      letter-spacing: 1px;\n    }\n    \n    /* Enhanced Blockquotes */\n    blockquote {\n      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);\n      border-left: 6px solid #0ea5e9;\n      margin: 25px 0;\n      padding: 20px 25px;\n      border-radius: 0 12px 12px 0;\n      font-style: italic;\n      color: #0c4a6e;\n      position: relative;\n      box-shadow: 0 4px 6px rgba(0,0,0,0.05);\n    }\n    \n    blockquote::before {\n      content: '\"';\n      font-size: 60px;\n      color: #0ea5e9;\n      position: absolute;\n      top: -10px;\n      left: 15px;\n      font-family: Georgia, serif;\n      opacity: 0.3;\n    }\n    \n    /* Bold and Italic */\n    strong, b {\n      font-weight: 700;\n      color: #1a365d;\n    }\n    \n    em, i {\n      font-style: italic;\n      color: #2b6cb0;\n    }\n    \n    /* Special Elements */\n    .highlight {\n      background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);\n      padding: 3px 6px;\n      border-radius: 4px;\n      font-weight: 600;\n    }\n    \n    /* Table Styling */\n    table {\n      width: 100%;\n      border-collapse: collapse;\n      margin: 25px 0;\n      background: white;\n      border-radius: 12px;\n      overflow: hidden;\n      box-shadow: 0 4px 6px rgba(0,0,0,0.05);\n    }\n    \n    th {\n      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n      color: white;\n      padding: 15px;\n      text-align: left;\n      font-weight: 600;\n    }\n    \n    td {\n      padding: 15px;\n      border-bottom: 1px solid #e2e8f0;\n    }\n    \n    tr:nth-child(even) {\n      background: #f8fafc;\n    }\n    \n    /* Links */\n    a {\n      color: #667eea;\n      text-decoration: none;\n      font-weight: 600;\n      border-bottom: 2px solid transparent;\n      transition: all 0.3s ease;\n    }\n    \n    a:hover {\n      border-bottom-color: #667eea;\n    }\n    \n    /* Print Optimization */\n    @media print {\n      body {\n        background: white !important;\n        margin: 20px;\n      }\n      \n      .content-wrapper {\n        box-shadow: none;\n        border-radius: 0;\n        padding: 20px;\n      }\n      \n      h1, h2 {\n        page-break-after: avoid;\n      }\n      \n      pre, blockquote, table {\n        page-break-inside: avoid;\n      }\n    }\n    \n    /* Utility Classes */\n    .text-center { text-align: center; }\n    .text-right { text-align: right; }\n    .mb-lg { margin-bottom: 30px; }\n    .mt-lg { margin-top: 30px; }\n    \n    /* Custom Script Sections */\n    .script-section {\n      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);\n      border: 2px solid #cbd5e0;\n      border-radius: 12px;\n      padding: 25px;\n      margin: 25px 0;\n      position: relative;\n    }\n    \n    .script-section::before {\n      content: '🎬';\n      position: absolute;\n      top: -15px;\n      left: 20px;\n      background: white;\n      padding: 0 10px;\n      font-size: 20px;\n    }\n    \n    .cta-box {\n      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n      color: white;\n      padding: 20px;\n      border-radius: 12px;\n      text-align: center;\n      margin: 30px 0;\n      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);\n    }\n    \n    .cta-box h3 {\n      color: white;\n      margin-bottom: 10px;\n    }\n  </style>\n</head>\n<body>\n  <div class=\"content-wrapper\">\n    ${rawHtml}\n  </div>\n</body>\n</html>\n`;\n\nreturn [{ html: fullHtml }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2832,
+        -848
+      ],
+      "id": "f65bce4d-02a2-45e3-842d-92bc8b73737e",
+      "name": "CSS1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.pdfshift.io/v3/convert/pdf",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "sk_801e07d8ea080136634eab40a92b21001439c8b2"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "source",
+              "value": "={{ $json.html }}"
+            },
+            {
+              "name": "landscape",
+              "value": "false"
+            },
+            {
+              "name": "use_print",
+              "value": "false"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "output.pdf"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        3040,
+        -848
+      ],
+      "id": "d779dffd-104d-4367-8be6-1f58d2ecae05",
+      "name": "HTML to PDF1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        3344,
+        -1056
+      ],
+      "id": "de7db163-9975-4663-918b-0ad7cc47b516",
+      "name": "Merge"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Get Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Video": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get Video Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Video Analysis": {
+      "main": [
+        [
+          {
+            "node": "Gemini Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Get Video Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Analysis": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Cleanup Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cleanup Request": {
+      "main": [
+        [
+          {
+            "node": "Markdown to HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown to HTML": {
+      "main": [
+        [
+          {
+            "node": "Complete HTML docment structure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Complete HTML docment structure": {
+      "main": [
+        [
+          {
+            "node": "CSS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CSS": {
+      "main": [
+        [
+          {
+            "node": "HTML to PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML to PDF": {
+      "main": [
+        [
+          {
+            "node": "Script to production notes",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Script to production notes": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cleanup Request1": {
+      "main": [
+        [
+          {
+            "node": "Markdown to HTML1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown to HTML1": {
+      "main": [
+        [
+          {
+            "node": "Complete HTML docment structure1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Complete HTML docment structure1": {
+      "main": [
+        [
+          {
+            "node": "CSS1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CSS1": {
+      "main": [
+        [
+          {
+            "node": "HTML to PDF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Cleanup Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML to PDF1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "74289bf7-ce1a-451e-86bd-3be4a6a48c19",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "001cfc68104f8ab88809c2a193e38a9502ca6b46e2ecf275175fc75b276edebb"
+  },
+  "id": "J0FRNBnX0LcfKuL3",
+  "tags": []
+}
